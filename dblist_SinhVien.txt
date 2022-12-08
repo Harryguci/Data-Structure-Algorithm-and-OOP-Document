@@ -1,0 +1,415 @@
+#include<iostream>
+#include <list>
+#include <string>
+#include <stdlib.h>
+using namespace std;
+template<class T>
+class node {
+	T elem; // Value of node
+	node<T>* prev, * next;
+	// prev : node* <previous>
+	// next : node* <next>
+public:
+	node(T x, node<T>* L = 0, node<T>* R = 0) {
+		elem = x; prev = L; next = R;
+	}
+	// Get value
+	T& getelem() {
+		return elem;
+	}
+	// Get previous node (of this)
+	node<T>*& getprev() {
+		return prev;
+	}
+	node<T>*& getnext() {
+		return next;
+	}
+	void setelem(T x) {
+		elem = x;
+	}
+	void setprev(node<T>* p = nullptr) {
+		prev = p;
+	}
+	void setnext(node<T>* p = nullptr) {
+		next = p;
+	}
+};
+
+template<class T>
+class dlist_iterator
+{
+	node<T>* curr;
+public:
+	dlist_iterator(node<T>* c = 0) {
+		curr = c;
+	}
+
+	node<T>* getcurr() {
+		return curr;
+	}
+
+	bool operator!=(dlist_iterator<T> it) {
+		return curr != it.getcurr();
+	}
+
+	T& operator*() {
+		return curr->getelem();
+	}
+
+	dlist_iterator operator++(int) {
+		//curr++
+		dlist_iterator it = curr; curr = curr->getnext(); return it;
+	}
+
+	dlist_iterator operator++() {
+		//++curr
+		curr = curr->getnext(); return curr;
+	}
+};
+
+template<class T>
+class dlist_reverse_iterator
+{
+	node<T>* curr;
+public:
+	dlist_reverse_iterator(node<T>* c = 0) { curr = c; }
+	node<T>* getcurr() {
+		return curr;
+	}
+	dlist_reverse_iterator& operator=(dlist_reverse_iterator<T> it) {
+		this->curr = it.getcurr(); return *this;
+	}
+	bool operator!=(dlist_reverse_iterator<T> it) {
+		return curr != it.getcurr();
+	}
+	T& operator*() {
+		return curr->getelem();
+	}
+	dlist_reverse_iterator operator++(int) {
+		//curr++
+		dlist_reverse_iterator it = curr; curr = curr->getprev();
+		return it;
+	}
+	dlist_reverse_iterator operator++() {
+		//++curr
+		curr = curr->getprev(); return curr;
+	}
+};
+
+template <class T>
+class dlist {
+	node<T>* head, * tail;
+	// head : First Node
+	// tail : last node
+	unsigned int num;
+	// num : size of list
+
+public:
+	typedef dlist_iterator<T> iterator;
+	typedef dlist_reverse_iterator<T> reverse_iterator;
+
+	dlist() { num = 0; head = tail = nullptr; }
+
+	//Tao list k phan tu bang x
+	dlist(int k, T x) {
+		num = 0; head = tail = nullptr;
+		while (k--) push_back(x);
+	}
+
+	bool empty() {
+		return num == 0;
+	}
+	unsigned size() {
+		return num;
+	}
+	reverse_iterator rbegin() {
+		return tail;
+	}
+	reverse_iterator rend() {
+		return NULL;
+	}
+	iterator begin() {
+		return head;
+	}
+	iterator end() {
+		return NULL;
+	}
+	void push_back(T x) {
+		if (num == 0) head = tail = new node<T>(x);
+		else {
+			tail->setnext(new node<T>(x, tail, 0));
+			tail = tail->getnext();
+		}
+		num++;
+	}
+	void push_front(T x) {
+		if (num == 0) head = tail = new node<T>(x);
+		else {
+			head->setprev(new node<T>(x, 0, head));
+			head = head->getprev();
+		}
+		num++;
+	}
+	T& front() {
+		return head->getelem();
+	}
+
+	T& back() {
+		return tail->getelem();
+	}
+	void pop_back() {
+		if (num == 0) return;
+		if (num == 1) head = tail = nullptr;
+		else {
+			tail = tail->getprev();
+			tail->setnext(NULL);
+		}
+		num--;
+	}
+	void pop_front() {
+		if (num == 0) return;
+		if (num == 1) head = tail = nullptr;
+		else {
+			head = head->getnext();
+			head->setprev(0);
+		}
+		num--;
+	}
+	void erase(iterator it) {
+		if (it.getcurr() == head) return pop_front();
+		if (it.getcurr() == tail) return pop_back();
+		node<T>* L = it.getcurr()->getprev(), * R = it.getcurr()->getnext();
+		L->setnext(R); R->setprev(L);
+		num--;
+	}
+
+	node<T>& getElement(unsigned i) {
+		if (i >= num) {
+			return this->back();
+		}
+
+		node<T>* h = this->head;
+		while (--i > 0) {
+			h++;
+		}
+		return *h;
+	}
+	node<T>& operator[](unsigned i) {
+		return getElement(i);
+	}
+};
+
+class student {
+private:
+	int maSv;
+	string ten;
+	int ngaySinh;
+	int thangSinh;
+	int namSinh;
+	string gioiTinh;
+	string que;
+
+public:
+
+	student() {
+		;
+	}
+	student(string t, int id, int y, string quequan) {
+		this->ten = t;
+		this->maSv = id;
+		this->namSinh = y;
+		this->que = quequan;
+	}
+	int getId() {
+		return this->maSv;
+	}
+	bool setYear(int year) {
+		if (year < 0) return false;
+		this->namSinh = year;
+		return true;
+	}
+
+	friend istream& operator>>(istream& is, student& a);
+	friend ostream& operator<<(ostream& os, student a);
+
+};
+
+class listSV : public dlist<student> {
+private:
+	node<student>* head, * tail;
+	// head : First Node
+	// tail : last node
+	unsigned int num;
+	// num : size of list
+public:
+	student& search(int masv, bool& is) {
+		dlist<student>::iterator it = this->begin();
+		is = false;
+		for (; it != this->end(); it++) {
+			if ((*it).getId() == masv) {
+				is = true;
+				return *it;
+			}
+		}
+	}
+	void instead(int namSinh, int masv) {
+		bool is = false;
+		student& a = this->search(masv, is);
+		if (is)
+			a.setYear(namSinh);
+	}
+
+	void swap(node<student>& a, node<student>& b) {
+		node<student> temp = a;
+		a = b;
+		b = temp;
+	}
+	void sort() {
+		for (int i = 0; i < num - 1; i++) {
+			for (int j = i + 1; j < num; j++) {
+				if ((this->getElement(i)).getelem().getId() > (this->getElement(j)).getelem().getId()) {
+					swap((this->getElement(i)), (this->getElement(j)));
+				}
+			}
+		}
+	}
+};
+
+
+istream& operator>>(istream& is, student& a) {
+	cout << "Ma sv : ";
+	is >> a.maSv;
+	cout << "Ho va ten : ";
+	while (!a.ten.length()) {
+		getline(is, a.ten);
+	}
+	cout << "Ngay thang nam sinh : ";
+	is >> a.ngaySinh >> a.thangSinh >> a.namSinh;
+	cout << "Que quan : ";
+	while (!a.que.length()) {
+		getline(is, a.que);
+	}
+	return is;
+}
+
+ostream& operator<<(ostream& os, student a) {
+
+	os << a.maSv << "\t";
+	os << a.ten << "\t";
+	if (a.ngaySinh < 10) os << "0";
+	os << a.ngaySinh << "/";
+	if (a.thangSinh < 10) os << "0";
+	os << a.thangSinh << "/" << a.namSinh << "\t";
+	os << a.que << "\n";
+	return os;
+}
+
+
+void Menu() {
+	cout << "\n============== M E N U ===============\n";
+
+	cout << "1. Tim kiem theo ma sv.\n";
+	cout << "2. Sua thong tin sv.\n";
+	cout << "3. In danh sach sv\n";
+	cout << "4. Them 1 sinh vien\n";
+
+	cout << "\n===================================\n";
+}
+
+enum status {
+	QUIT, SEARCH_ID, INSTEAD_Y, PRINT_LIST, ADD, LAST,
+};
+
+int main() {
+	//dlist<student> arr;
+	listSV arr;
+
+	int status = 0;
+	int n;
+
+	cout << "So luong sinh vien : ";
+	cin >> n;
+	while (n--) {
+		student temp;
+		cin >> temp;
+		arr.push_back(temp);
+	}
+
+
+	Menu();
+
+	do {
+		cout << "\n---------------------NHAP LUA CHON--------------------\n";
+
+		cin >> status;
+		switch (status)
+		{
+		case SEARCH_ID: {
+			cout << "\n---------------------TIM KIEM SINH VIEN--------------------\n";
+
+			int value;
+			bool is = false;
+			cout << "Nhap ma sv can tim : ";
+			cin >> value;
+			student& a = arr.search(value, is);
+			if (is)
+				cout << "Sinh vien thao man : \n" << a << endl;
+			else
+				cout << "Khong tim thay sinh vien nao.\n";
+			cout << "\n----------------------------------------------------------\n";
+
+			break;
+		}
+		case INSTEAD_Y: {
+			cout << "\n------------------------SUA THONG TIN SV--------------------------\n";
+
+			int value;
+			bool is = false;
+			cout << "Nhap ma sv can tim : ";
+			cin >> value;
+			student& a = arr.search(value, is);
+			if (is) {
+				int year;
+				cout << "Nhap nam sinh can thay doi : ";
+				cin >> year;
+				a.setYear(year);
+
+				cout << a << "\n";
+			}
+			else
+				cout << "Khong tim thay sinh vien nao.\n";
+			cout << "\n----------------------------------------------------------\n";
+
+			break;
+		}
+		case PRINT_LIST: {
+			cout << "\n\n------------------DANH SACH VUA NHAP : --------------------\n";
+
+			dlist<student>::iterator it = arr.begin();
+			cout << "Ma sv\tHo va Ten\tNgay sinh\tQue quan\n";
+			for (; it != arr.end(); it++) {
+				cout << *it;
+			}
+
+			break;
+		}
+		case ADD: {
+			cout << "\n------------------ THEM SINH VIEN : --------------------\n";
+
+			student st1;
+			cout << "\nNhap thong tin sinh vien : \n";
+			cin >> st1;
+			arr.push_back(st1);
+
+			cout << "\nThem thanh cong !\n";
+
+			break;
+		}
+		default:
+			break;
+		}
+
+	} while (status >= QUIT && status <= LAST);
+
+	return 0;
+}

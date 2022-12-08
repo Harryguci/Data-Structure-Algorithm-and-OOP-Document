@@ -1,0 +1,68 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+class Time {
+	int hour, minute, second;
+public:
+	Time();
+	//void input();
+	//void display();
+	void setHour(int h);
+	void setMinute(int m);
+	void setSecond(int s);
+	int getHour();
+	int getMinute();
+	int getSecond();
+
+	// Input Output
+	friend istream& operator>>(istream& is, Time& t1);
+	friend ostream& operator<<(ostream& os,const Time& t1);
+};
+
+Time::Time() {
+	hour = minute = second = 0;
+}
+
+void Time::setHour(int h) {
+	this->hour = h;
+}
+
+void Time::setMinute(int m) {
+	this->minute = m;
+}
+
+void Time::setSecond(int s) {
+	this->second = s;
+}
+
+int Time::getHour() {
+	return this->hour;
+}
+int Time::getMinute() {
+	return this->minute;
+}
+int Time::getSecond() {
+	return this->second;
+}
+
+istream& operator>>(istream& is, Time& t1) {
+	is >> t1.hour >> t1.minute >> t1.second;
+	return is;
+}
+ostream& operator<<(ostream& os,const Time& t1) {
+	if (t1.hour < 10) os << "0";
+	os << t1.hour << ":";
+	if (t1.minute < 10) os << "0";
+	os << t1.minute << ":";
+	if (t1.second < 10) os << "0";
+	os << t1.second << endl;
+	return os;
+}
+int main()
+{
+	Time t1;
+	cin >> t1;
+	cout << t1;
+	return 0;
+}

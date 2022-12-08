@@ -1,0 +1,102 @@
+#include <iostream>
+#include <math.h>
+#include <limits.h>
+using namespace std;
+
+template<class T> class Vector {
+	unsigned int cap, num;
+	T* buff; // 
+public:
+	typedef T* iterator;
+	
+	typedef Vector_reverse_iterator<T> reverese_iterator;
+
+	Vector() {
+		cap = 0;
+		num = 0;
+		buff = NULL;
+	}
+	Vector(unsigned int C) {
+		cap = C;
+		num = C;
+		buff = new T[C]{};
+	}
+	Vector(unsigned int C, int value) {
+		cap = C;
+		num = C;
+		buff = new T[C];
+		for (int i = 0; i < C; i++) {
+			buff[i] = value;
+		}
+	}
+	~Vector() {
+		if (buff != NULL)
+			delete[] buff;
+	}
+	void reverse(unsigned int newcap) {
+		if (newcap < cap) return;
+		T* arr = new T[newcap];
+		for (int i = 0; i < cap; i++) {
+			arr[i] = this->buff[i];
+		}
+		if (buff) delete[] buff;
+		buff = arr;
+		cap = newcap;
+	}
+	T& back() {
+		return buff[num - 1];
+	}
+	unsigned int size() {
+		return num;
+	}
+	bool empty() {
+		if (!size()) return true;
+		else
+			return false;
+	}
+	void pop_back() {
+		if (num) num--;
+	}
+	void push_back(T x) {
+		if (cap == num) reverse(cap * 2 + 1);
+		buff[num++] = x;
+	}
+	T& at(int k) {
+		if (k < 0 || k >= num) {
+			k = 0;
+		}
+		return buff[k];
+	}
+	T& operator[](int k) {
+		return this->at(k);
+	}
+	void resize(int newsize, T x = 0) {
+		if (newsize > cap) reverse(newsize);
+		num = newsize;
+		for (int i = 0; i < num; i++) { buff[i] = x; }
+	}
+	void remove(int k) {
+		if (k < 0 || k >= num) return;
+		for (int i = k + 1; i < num; i++) {
+			buff[i - 1] = buff[i];
+		}
+		num--;
+	}
+	void insert(int k, T x) {
+		if (k < 0 || k >= num) return;
+		if (num == cap) {
+			reverse(cap * 2 + 1);
+		}
+		for (int i = num; i >= k; i--) {
+			buff[i + 1] = buff[i];
+		}
+		num++;
+	}
+};
+int main() {
+	Vector<int> digits;
+	int n;
+	cin >> n;
+
+	return 0;
+}

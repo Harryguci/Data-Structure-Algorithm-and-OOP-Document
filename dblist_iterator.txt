@@ -1,0 +1,172 @@
+#include <iostream>
+using namespace std;
+
+template<class T>
+class node {
+private:
+	T elem;
+	node* prev, * next;
+public:
+	node() {
+		elem = T();
+		prev = next = NULL;
+	}
+	node(const T& e, node* p, node* n) {
+		elem = e;
+		prev = p;
+		next = n;
+	}
+	void setNext(node* n) {
+		next = n;
+	}
+	void setPrev(node* p) {
+		prev = p;
+	}
+	node* getNext() {
+		return next;
+	}
+	node* getPrev() {
+		return prev;
+	}
+	T& getElem() {
+		return elem;
+	}
+
+};
+
+template<class T>
+class dblist_iterator {
+private:
+	node<T>* curr;
+public:
+	dblist_iterator() {
+		curr = NULL;
+	}
+	dblist_iterator(node<T>* p) {
+		curr = p;
+	}
+	void setCurr(node<T>* p) {
+		curr = p;
+	}
+	node<T>*& getCurr() {
+		return curr;
+	}
+	T& getElem() {
+		return curr->getElem();
+	}
+	friend dblist_iterator& operator ++(dblist_iterator& A) {
+		A.curr = A.curr->getNext();
+		return A;
+	}
+	friend dblist_iterator& operator ++(dblist_iterator& A, int) {
+		dblist_iterator temp = A.curr;
+		A.curr = A.curr->getNext();
+		return temp;
+	}
+	friend T& operator*(dblist_iterator A) {
+		return A.curr->getElem();
+	}
+	bool operator != (dblist_iterator B) {
+		return curr != B.getCurr();
+	}
+	bool operator == (dblist_iterator B) {
+		return curr == B.getCurr();
+	}
+	//friend T& operator*(int) {
+	//	return A.curr->getElem();
+	//}
+};
+
+template<class T>
+class dblist {
+private:
+	node<T>* head, * trail;
+	int num;
+public:
+	typedef dblist_iterator<T> iterator;
+	dblist() {
+		head = trail = NULL;
+		num = 0;
+	}
+	bool empty() {
+		return num == 0;
+	}
+	int size() {
+		return num;
+	}
+	void push_back(const T& value) {
+		if (empty()) {
+			head = trail = new node<T>(value, 0, 0);
+			num++;
+			return;
+		}
+		trail->setNext(new node<T>(value, trail, 0));
+		trail = trail->getNext();
+		num++;
+	}
+	void push_front(const T& value) {
+		if (empty()) {
+			head = trail = new node<T>(value, 0, 0);
+			num++;
+			return;
+		}
+		head->setPrev(new node<T>(value, 0, head));
+		head = head->getPrev();
+		num++;
+	}
+	iterator begin() {
+		return this->head;
+	}
+	iterator end() {
+		return NULL;
+	}
+	void pop_front() {
+		if (empty())return;
+
+		head = head->getNext();
+		head->setPrev(NULL);
+	}
+	void pop_back() {
+		if (empty())return;
+
+		trail = trail->getPrev();
+		trail->setNext(NULL);
+	}
+	void erase(const T& value) {
+		if (empty()) return;
+		iterator it = begin();
+		if ((*it) == value) {
+			pop_front(); it++;
+		}
+
+		while (it != end()) {
+			if ((*it) == value) {
+				iterator l = iterator(it.getCurr()->getPrev());
+				l.getCurr()->setNext(it.getCurr()->getNext());
+			}
+			++it;
+		}
+	}
+};
+
+int main() {
+	dblist<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.push_back(2);
+	list.push_front(0);
+	list.push_front(2);
+
+	dblist<int>::iterator it = list.begin();
+	for (it; it != list.end(); it++) {
+		cout << (*it) << " ";
+	}
+	list.erase(2);
+	cout << endl;
+
+	for (it = list.begin(); it != list.end(); it++) {
+		cout << (*it) << " ";
+	}
+	return 0;
+}

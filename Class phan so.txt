@@ -1,0 +1,263 @@
+#include <iostream>
+using namespace std;
+
+int _gcd(int a, int b) {
+	if (b == 0) return a;
+	else
+		return _gcd(b, a % b);
+}
+
+class PS {
+private:
+	int _tu, _mau;
+
+	void Handle() {
+		int temp = _gcd(this->_tu, this->_mau);
+		this->_tu /= temp;
+		this->_mau /= temp;
+		
+		if  (this->_tu > 0 && this->_mau < 0) {
+			this->_mau *= -1;
+			this->_tu *= -1;
+		}
+	}
+
+public:
+	PS();
+	PS(int a, int b);
+	~PS();
+	
+	void set(int a, int b);
+
+	int getTu() {
+		return this->_tu;
+	}
+
+	int getMau() {
+		return this->_mau;
+	}
+	/*            Operator              */
+	
+	// 1 ngoi
+	PS operator++();
+	PS operator++(int);
+	PS operator--();
+	PS operator--(int);
+	PS operator-();
+
+	// 2 ngoi
+	friend void operator+=(PS& A, const PS& B);
+	friend PS operator+(const PS& A, const PS& B);
+
+	friend void operator-=(PS& A, const PS& B);
+	friend PS operator-(const PS& A, const PS& B);
+
+	friend void operator*=(PS& A, const PS& B);
+	friend PS operator*(const PS& A, const PS& B);
+
+	friend void operator/=(PS& A, const PS& B);
+	friend PS operator/(const PS& A, const PS& B);
+
+	// Compare
+	friend bool operator==(const PS& A, const PS& B);
+	friend bool operator>(const PS& A, const PS& B);
+	friend bool operator>=(const PS& A, const PS& B);
+	friend bool operator<(const PS& A, const PS& B);
+	friend bool operator<=(const PS& A, const PS& B);
+
+	// Input Output
+	friend ostream& operator<<(ostream& os, PS& A);
+	friend istream& operator>>(istream& is, PS& A);
+};
+
+PS::PS() {
+	this->_tu = this->_mau = 0;
+}
+
+PS::PS(int a, int b) {
+	this->_tu = a;
+	this->_mau = b;
+	Handle();
+}
+
+PS::~PS() { ; }
+
+void PS::set(int a, int b) {
+	this->_tu = a;
+	this->_mau = b;
+	Handle();
+}
+
+PS PS::operator++() {
+	// ++a
+	(*this) += PS(1, 1);
+	this->Handle();
+	return (*this);
+}
+
+PS PS::operator++(int) {
+	// a++
+	PS temp(this->_tu, this->_mau);
+	++(*this);
+	this->Handle();
+	return temp;
+}
+
+PS PS::operator--() { 
+	// --a
+	(*this) -= PS(1, 1);
+	this->Handle();
+	return (*this);
+}
+PS PS::operator--(int) {
+	// a--
+	PS temp(*this);
+	--(*this);
+	this->Handle();
+	return temp;
+}
+PS PS::operator-() {
+	// -a
+	(*this) *= PS(-1, 1);
+	this->Handle();
+	return (*this);
+}
+
+void operator+=(PS& A, const PS& B) {
+	// a += b
+	PS temp1 = A;
+	PS temp2 = B;
+	temp1._tu *= B._mau;
+	temp1._mau *= B._mau;
+	temp2._tu *= A._mau;
+	temp2._mau *= A._mau;
+
+	A = PS(temp1._tu + temp2._tu, temp1._mau);
+	A.Handle();
+}
+
+PS operator+(const PS& A, const PS& B) {
+	// a + b
+	PS res = A;
+	res += B;
+	res.Handle();
+	return res;
+}
+
+void operator-=(PS& A, const PS& B) {
+	// a -= b
+	PS temp1 = A;
+	PS temp2 = B;
+	temp1._tu *= B._mau;
+	temp1._mau *= B._mau;
+	temp2._tu *= A._mau;
+	temp2._mau *= A._mau;
+
+	A = PS(temp1._tu - temp2._tu, temp1._mau);
+	A.Handle();
+}
+
+PS operator-(const PS& A, const PS& B) {
+	// a - b
+	PS res = A;
+	res -= B;
+	res.Handle();
+	return res;
+}
+
+void operator*=(PS& A, const PS& B) {
+	// a *= b
+	A._mau *= B._mau;
+	A._tu *= B._tu;
+	A.Handle();
+}
+
+PS operator*(const PS& A, const PS& B) {
+	// a * b
+	PS res = A;
+	res *= B;
+	res.Handle();
+	return res;
+}
+
+void operator/=(PS& A, const PS& B) {
+	// a /= b
+	PS temp(B._mau, B._tu);
+	A *= temp;
+	A.Handle();
+}
+
+PS operator/(const PS& A, const PS& B) {
+	// a / b
+	PS res = A;
+	res /= B;
+	res.Handle();
+	return res;
+}
+
+ostream& operator<<(ostream& os, PS& A) {
+	if (A._mau == 0) {
+		os << "NaN";
+		return os;
+	}
+	os << A._tu << "/" << A._mau;
+	return os;
+}
+
+istream& operator>>(istream& is, PS& A) {
+	is >> A._tu >> A._mau;
+	return is;
+}
+
+bool operator==(const PS& A, const PS& B) {
+	return (A._tu == B._tu && A._mau == B._mau);
+}
+
+bool operator>(const PS& A, const PS& B) {
+	PS t1 = A;
+	PS t2 = B;
+	t1._mau *= t2._mau;
+	t1._tu *= t2._mau;
+	t2._tu *= t1._mau;
+	t2._mau *= t1._mau;
+	return (t1._tu > t2._tu);
+}
+
+bool operator>=(const PS& A, const PS& B) {
+	if (A == B || A > B)
+		return true;
+	else
+		return false;
+}
+
+bool operator<(const PS& A, const PS& B) {
+	if (A == B || A > B)
+		return false;
+	else
+		return true;
+}
+
+bool operator<=(const PS& A, const PS& B) {
+	if (A < B || A == B)
+		return true;
+	else
+		return false;
+}
+
+int main() {	
+	PS p1, p2;
+	cout << "Nhap phan so 1 : \n\t";
+	cin >> p1;
+	cout << "Nhap phan so 2 : \n\t";
+	cin >> p2;
+	
+	PS res = p1 + p2;
+	cout << "Tong : " << res << endl;
+	res = p1 - p2;
+	cout << "Hieu : " << res << endl;
+	res = p1 * p2;
+	cout << "Tich : " << res << endl;
+	res = p1 / p2;
+	cout << "Thuong : " << res << endl;
+	return 0;
+}

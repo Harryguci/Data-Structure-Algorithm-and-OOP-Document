@@ -1,0 +1,112 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+template<class T>
+class node {
+private:
+	T elem;
+	node* left, * right;
+public:
+	node() {
+		elem = T();
+		left = right = NULL;
+	}
+	node(T e, node* l, node* r) {
+		this->elem = e;
+		this->left = l;
+		this->right = r;
+	}
+	T& getElem() {
+		return this->elem;
+	}
+	node* getLeft() {
+		return this->left;
+	}
+	node* getRight() {
+		return this->right;
+	}
+	void setLeft(node* p) {
+		left = p;
+	}
+	void setRight(node* p) {
+		right = p;
+	}
+};
+template<class T>
+class tree {
+private:
+	node<T>* root;
+
+public:
+	tree() {
+		this->root = NULL;
+	}
+	node<T>* add(T value, node<T>* root) {
+		if (this->root == NULL) {
+			this->root = new node<T>(value, NULL, NULL);
+			return this->root;
+		}
+
+		if (root == NULL) {
+			root = new node<T>(value, NULL, NULL);
+			return root;
+		}
+		if (value < root->getElem())
+			root->setLeft(add(value, root->getLeft()));
+		else if (value > root->getElem())
+			root->setRight(add(value, root->getRight()));
+		else
+			return root;
+	}
+	node<T>* Root() {
+		return this->root;
+	}
+	void inorder(node<T>* root) {
+		if (!root) {
+			return;
+		}
+		inorder(root->getLeft());
+		cout << root->getElem() << " ";
+		inorder(root->getRight());
+	}
+
+	node<T>* binarySearch(const T& elem, node<T>* curr) {
+		if (curr == NULL)
+			return NULL;
+		if (curr->getElem() == elem)
+			return curr;
+		else if (curr->getElem() < elem)
+			return binarySearch(elem, curr->getRight());
+		else
+			return binarySearch(elem, curr->getLeft());
+	}
+};
+
+int main() {
+
+	tree<int> tree;
+	tree.add(5, tree.Root());
+	tree.add(3, tree.Root());
+	tree.add(4, tree.Root());
+	tree.add(1, tree.Root());
+	tree.add(7, tree.Root());
+	tree.add(6, tree.Root());
+	tree.add(8, tree.Root());
+	tree.add(8, tree.Root());
+
+	tree.inorder(tree.Root());
+	int x = 10;
+	node<int> *res = tree.binarySearch(x, tree.Root());
+	if (res) {
+		cout << "\nTree includes " << x << endl;
+	}
+	else
+		cout << "\nTree doesn't include " << x << endl;
+
+	return 0;
+}

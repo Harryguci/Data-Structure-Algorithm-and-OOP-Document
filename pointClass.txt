@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+class Point {
+	int _x, _y; 
+public:
+	Point() { 
+		_x = _y = 0;
+	}
+	Point(double a, double b) {
+		_x = a;
+		_y = b;
+	}
+	~Point() { ; }
+
+	void Set(double x, double y) {
+		_x = x;
+		_y = y;
+	}
+
+	void Display() {
+		cout << "(" << _x << ", " << _y << ")";
+	}
+
+	int getX() {
+		return _x;
+	}
+	int getY() {
+		return _y;
+	}
+
+	friend bool operator!=(const Point a, const Point b);
+};
+
+bool operator!=(const Point a, const Point b) {
+	return (a._x != b._x || a._y != b._y);
+}
+
+class Line {
+private:
+	Point A;
+	Point B;
+public:
+	Line() {
+		A = B = { 0, 0 };
+	}
+	Line(Point O1, Point O2) {
+		A = O1;
+		B = O2;
+	}
+	void Set() {
+		double x, y;
+		cout << "Nhap diem A(x,y) : ";
+		cin >> x >> y;
+		A.Set(x, y);
+
+		cout << "Nhap diem B(x,y) : ";
+		cin >> x >> y;
+		B.Set(x, y);
+	}
+	
+	double Distance() {
+
+		// Do dai doan A -> B
+		if (A != B) {
+			return sqrt((A.getX() - B.getX()) * (A.getX() - B.getX()) * 1.0 + (A.getY() - B.getY()) * (A.getY() - B.getY() * 1.0));
+		}
+		else
+			return 0;
+	}
+	void Display() {
+		cout << " (" << A.getX() << ", " << A.getY() << ") -->";
+		cout << " (" << B.getX() << ", " << B.getY() << ") ";
+	}
+};
+
+int main() {
+	Line l1;
+	l1.Set();
+	cout << "Do dai doan thang ";
+	l1.Display();
+	cout << " = " << l1.Distance();
+	return 0;
+}

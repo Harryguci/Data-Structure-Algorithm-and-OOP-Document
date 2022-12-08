@@ -1,0 +1,87 @@
+#include<iostream>
+#include <list>
+#include <string>
+#include <stdlib.h>
+using namespace std;
+class student {
+private:
+	string maSv;
+	string ten;
+	int ngaySinh;
+	int thangSinh;
+	int namSinh;
+	string gioiTinh;
+	string que;
+
+public:
+
+	student() {
+		;
+	}
+	student(string t, string id, int y, string quequan) {
+		this->ten = t;
+		this->maSv = id;
+		this->namSinh = y;
+		this->que = quequan;
+	}
+	
+	friend istream& operator>>(istream& is, student& a);
+	friend ostream& operator<<(ostream& os, student a);
+
+};
+
+istream& operator>>(istream& is, student& a) {
+	cout << "Ma sv : ";
+	is >> a.maSv;
+	cout << "Ho va ten : ";
+	while (!a.ten.length()) {
+		getline(is, a.ten);
+	}
+	cout << "Ngay thang nam sinh : ";
+	is >> a.ngaySinh >> a.thangSinh >> a.namSinh;
+	cout << "Que quan : ";
+	while (!a.que.length()) {
+		getline(is, a.que);
+	}
+	return is;
+}
+
+ostream& operator<<(ostream& os, student a) {
+	os << "Ma sv : ";
+	os << a.maSv << endl;
+	os << "Ho va ten : ";
+	os << a.ten << endl;
+	os << "Ngay thang nam sinh : ";
+
+	if (a.ngaySinh < 10) os << "0";
+	os << a.ngaySinh << "/";
+	if (a.thangSinh < 10) os << "0";
+	os << a.thangSinh << "/" << a.namSinh << endl;
+	os << "Que quan : ";
+	os << a.que << endl;
+	return os;
+}
+
+int main() {
+	list<student> arr;
+	
+	int n;
+	cout << "So luong sinh vien : ";
+	cin >> n;
+	while (n--) {
+		student temp;
+		cout << "-----------------------------------------------------------" << endl;
+		cin >> temp;
+		arr.push_back(temp);
+	}
+
+
+	cout << "\n\n------------------DANH SACH VUA NHAP : --------------------\n";
+
+	while (!arr.empty()) {
+		cout << "-----------------------------------------------------------" << endl;
+		cout << arr.back() << endl;
+		arr.pop_back();
+	}
+	return 0;
+}

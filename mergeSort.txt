@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+int arr[] = { 5,1,4,3,10,4,5,9,8,5 };
+int n;
+int* merge(int* arr, int low, int high) {
+	int mid = (high + low) / 2;
+	int i, j, k, num;
+
+	// i: chi so mang ben trai mid
+	// j: chi so mang ben phai mid
+	// k: chi so mang res
+	// num: so luong phan tu (mang dang xet)
+
+	num = (high - low + 1);
+
+	i = low;
+	j = mid + 1;
+	k = 0;
+
+	int* res = new int[n]; // mang ket qua merge
+
+	// Xu ly meger
+	while (i <= mid && j <= high) {
+		if (arr[i] <= arr[j]) res[k++] = arr[i++];
+		else
+			res[k++] = arr[j++];
+	}
+	while (i <= mid)
+		res[k++] = arr[i++];
+
+	while (j <= high)
+		res[k++] = arr[j++];
+
+	// Cap nhat ket qua merge vao mang arr
+	for (int i = 0, q = low; i < k; i++, q++) 
+		arr[q] = res[i];
+
+	
+	return res;
+}
+
+// In ra mang arr
+void display() {
+	for (int i = 0; i < n; i++) {
+		cout << arr[i] << " ";
+	}
+}
+
+void mergeSort(int* arr, int low, int high) {
+	if (low < high) {
+		int mid = (low + high) / 2;
+		mergeSort(arr, low, mid);
+		mergeSort(arr, mid + 1, high);
+		merge(arr, low, high);
+		display(); cout << endl;
+	}
+}
+int main() {
+	n = sizeof(arr) / sizeof(int);
+	mergeSort(arr, 0, n - 1);
+	
+	display();
+
+	return 0;
+}

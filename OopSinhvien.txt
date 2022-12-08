@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <Windows.h>
+#include <stdlib.h>
+
+using namespace std;
+class date {
+private:
+	int d, m, y;
+public:
+	date() {
+		d = m = y = 0;
+	}
+	date(int a, int b, int c) {
+		d = a;
+		m = b;
+		y = c;
+	}
+	void Input() {
+		cin >> d >> m >> y;
+	}
+	void Set(int a, int b, int c) {
+		d = a;
+		m = b;
+		y = c;
+	}
+	void Display() {
+		cout << d << "/" << m << "/" << y << endl;
+	}
+	int getD() {
+		return d;
+	}
+	int getM() {
+		return m;
+	}
+	int getY() {
+		return y;
+	}
+};
+class student {
+private :
+	string _name;
+	date _birthday;
+	string _soBaoDanh;
+	float _toan, _ly,_hoa;
+
+public:
+	student() { ; }
+	~student() { ; }
+	
+	void Input() {
+		cout << "Ho va ten : ";
+		getline(cin, _name);
+		cout << "Ngay sinh : ";
+		_birthday.Input();
+		cout << "So bao danh : ";
+		cin >> _soBaoDanh;
+		cout << "Diem toan : ";
+		cin >> _toan;
+		cout << "Diem ly : ";
+		cin >> _ly;
+		cout << "Diem hoa : ";
+		cin >> _hoa;
+	}
+
+	void Display() {
+		cout << "---------------------------" << endl;
+		cout << "Ho va ten : " << _name << endl;
+		cout << "Ngay sinh : ";
+		_birthday.Display();
+		cout << "So bao danh : " << _soBaoDanh << endl;
+		cout << "Diem toan : " << _toan << endl;
+		cout << "Diem ly : " << _ly << endl;
+		cout << "Diem hoa : " << _hoa << endl;
+		cout << "---------------------------" << endl;
+	}
+
+	float TongDiem() {
+		return (_toan + _ly + _hoa);
+	}
+
+	float TOAN() {
+		return _toan;
+	}
+
+	float LY() {
+		return _ly;
+	}
+
+	float HOA() {
+		return _hoa;
+	}
+};
+int main() {
+	student sv;
+	sv.Input();
+	sv.Display();
+	cout << endl << "Tong diem : " << sv.TongDiem() << endl;
+	return 0;
+}

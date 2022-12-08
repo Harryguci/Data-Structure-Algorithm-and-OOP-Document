@@ -1,0 +1,107 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+class Point {
+	double _x, _y;
+public:
+	Point() {
+		_x = _y = 0;
+	}
+	Point(double a, double b) {
+		_x = a;
+		_y = b;
+	}
+
+	void Set(double x, double y) {
+		_x = x;
+		_y = y;
+	}
+
+	void Display() {
+		cout << "(" << _x << ", " << _y << ")";
+	}
+
+	int getX() {
+		return _x;
+	}
+	int getY() {
+		return _y;
+	}
+	// Khoang cach 2 diem A, B
+	friend double distance(Point A, Point B);
+
+	// Input Ouput
+	friend istream& operator>>(istream& is, Point& A);
+	friend ostream& operator<<(ostream& os, Point& A);
+};
+istream& operator>>(istream& is, Point& A) {
+	is >> A._x >> A._y;
+
+	return is;
+}
+ostream& operator<<(ostream& os, Point& A) {
+	os << "(" << A._x << ", " << A._y << ")";
+	return os;
+}
+double distance(Point A, Point B) {
+
+	return sqrt(pow(A._x - B._x, 2) + pow(A._y - B._y, 2));
+}
+class Triangle {
+private:
+	Point A, B, C;
+public:
+	Triangle();
+	Triangle(Point O1, Point O2, Point O3);
+	// In Output
+	friend ostream& operator<<(ostream& os, Triangle& A);
+	friend istream& operator>>(istream& is, Triangle& A);
+	// Calc
+	double ChuVi();
+	double DienTich();
+};
+
+Triangle::Triangle() {
+	A = B = C = Point();
+}
+Triangle::Triangle(Point O1, Point O2, Point O3) {
+	A = O1;
+	B = O2;
+	C = O3;
+}
+istream& operator>>(istream& is, Triangle& A) {
+	is >> A.A >> A.B >> A.C;
+	return is;
+}
+ostream& operator<<(ostream& os, Triangle& A) {
+	os << A.A << " " << A.B << " " << A.C;
+	return os;
+}
+double Triangle::ChuVi() {
+	double L1 = distance(this->A, this->B);
+	double L2 = distance(this->A, this->C);
+	double L3 = distance(this->B, this->C);
+
+	return (L1 + L2 + L3);
+}
+
+double Triangle::DienTich() {
+	double L1 = distance(this->A, this->B);
+	double L2 = distance(this->A, this->C);
+	double L3 = distance(this->B, this->C);
+	double P = double((L1 + L2 + L3) / (double)2.0);
+	double res = sqrt(P * (P - L1) * (P - L2) * (P - L3));
+	return res;
+}
+int main() {
+	Triangle tr1;
+	cout << "Nhap 3 diem cua tam giac : \n";
+	cin >> tr1;
+	cout << endl << "Tam giac vua nhap : " << endl;
+	cout << tr1 << endl;
+	cout << "Dien tich : " << tr1.DienTich() << endl;
+	cout << "Chu Vi : " << tr1.ChuVi() << endl;
+
+	return 0;
+}

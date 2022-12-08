@@ -1,0 +1,111 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+class Node {
+public :
+	int _value;
+	Node* _next;
+
+	Node() {
+		_value = 0;
+		_next = NULL;
+	}
+	Node(int value) {
+		_value = value;
+		_next = NULL;
+	}
+	~Node() { ; }
+};
+
+class list {
+private :
+	Node* _head;
+public:
+	void Init() {
+		_head = NULL;
+	}
+
+	Node* createNode(int _value) {
+		Node* temp = new Node(_value);
+		temp->_next = NULL;
+		return temp;
+	}
+
+	void Push_back(int value) {
+		if (_head == NULL) {
+			_head = createNode(value);
+			return;
+		}
+		else {
+			Node* curr = _head;
+			while (curr->_next != NULL) curr = curr->_next;
+
+			curr->_next = createNode(value);
+		}
+	}
+	void Push_front(int value) {
+		Node* temp = createNode(value);
+		temp->_next = _head;
+		_head = temp;
+	}
+	void Pop_back() {
+		Node* curr = _head;
+		Node* p = _head;
+		if (_head == NULL)
+			return;
+		while (curr->_next != NULL) {
+			p = curr;
+			curr = curr->_next;
+		}
+		p->_next->~Node();
+		p->_next = NULL;
+	}
+	void Pop_front() {
+		if (_head == NULL)
+			return;
+		Node* temp = _head;
+		_head->~Node();
+		_head = temp->_next;
+	}
+	int front() {
+		if (_head == NULL)
+			return 0;
+		else
+			return _head->_value;
+	}
+	int back() {
+		Node* curr = _head;
+		if (_head == NULL) 
+			return 0;
+		while (curr->_next != NULL)
+			curr = curr->_next;
+		return curr->_value;
+	}
+	void Display() {
+		if (_head == NULL) return;
+		else {
+			Node* curr = _head;
+			while (curr != NULL) {
+				cout << curr->_value << " ";
+				curr = curr->_next;
+			}
+		}
+	}
+};
+
+int main()
+{
+	list l1;
+	l1.Init();
+	l1.Push_back(1);
+	l1.Push_back(2);
+	l1.Push_back(3);
+	l1.Push_front(9);
+	l1.Push_front(8);
+	l1.Display();
+	cout << endl;
+	cout << "Front : " << l1.front() << endl;
+	cout << "Back : " << l1.back() << endl;
+	return 0;
+}

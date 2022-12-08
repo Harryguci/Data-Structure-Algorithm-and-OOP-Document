@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <Windows.h>
+#include <stdlib.h>
+
+using namespace std;
+
+class Time {
+private :
+	int h, m, s;
+public:
+	Time() {
+		h = m = s = 0;
+	} 
+	Time(int a, int b, int c)
+	{
+		h = a;
+		m = b;
+		s = c;
+	}
+	~Time() {
+		;
+	}
+	void Set(int a, int b, int c) {
+		h = a;
+		m = b;
+		s = c;
+	}
+	void Set() {
+		cout << "Nhap gio : ";
+		cin >> h;
+		cout << "Nhap phut : ";
+		cin >> m;
+		cout << "Nhap giay : ";
+		cin >> s;
+	}
+	void Display() {
+		cout << endl << endl << "\t\t\t";
+		cout << "TIME : ";
+		if (h < 10) cout << "0";
+		cout << h << ":";
+		if (m < 10)
+			cout << "0";
+		cout << m << ":";
+		if (s < 10) cout << "0";
+		cout << s << endl;
+	}
+	void Handle() {
+		Sleep(1000);
+		s++;
+		if (s >= 60) {
+			s = 0;
+			m++;
+		}
+		if (m >= 60) {
+			m = 0;
+			h++;
+		}
+		if (h >= 24) 
+			h = 0;
+	}
+};
+void clrscr() {
+	system("cls");
+}
+int main() {
+	Time t1;
+	bool is_quit = false;
+	t1.Set();
+	while (!is_quit) {
+		t1.Display();
+		t1.Handle();
+		clrscr();
+	}
+
+	return 0;
+}

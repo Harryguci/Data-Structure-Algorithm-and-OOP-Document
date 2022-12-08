@@ -1,0 +1,59 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+class DT {
+private:
+	int n; // level
+	float* arr; // he so
+public:
+	DT();
+	DT(int len);
+	~DT();
+	void input();
+	void display();
+	double Fx(double x);
+};
+DT::DT() { ; }
+DT::DT(int len) {
+	this->n = len;
+	arr = NULL;
+}
+DT::~DT() { ; }
+void DT::input() {
+	cout << "Nhap so luong phan tu : ";
+	cin >> this->n;
+	arr = new float[n];
+	for (int i = 0; i <= n; i++) {
+		cin >> this->arr[i];
+	}
+}
+void DT::display() {
+	int curr = n;
+	cout << endl << "DT = ";
+	for (int i = 0; i <= n; i++) {
+		if (i != n)
+			cout << this->arr[i] << "x" << "^" << curr-- << " + ";
+		else
+			cout << this->arr[i];
+	}
+}
+double DT::Fx(double x) {
+	int curr = this->n;
+	double res = 0;
+	for (int i = 0; i <= n; i++) {
+		res += this->arr[i] * pow(x, curr--);
+	}
+	return res;
+}
+int main()
+{
+	DT dt1;
+	dt1.input();
+	dt1.display();
+	double x;
+	cout << endl << "x = ";
+	cin >> x;
+	double res = dt1.Fx(x);
+	cout << endl << "Fx(" << x << ") = " << res;
+	return 0;
+}
